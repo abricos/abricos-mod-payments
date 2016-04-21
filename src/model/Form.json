@@ -8,6 +8,12 @@
     "url": {
       "type": "string"
     },
+    "urlReturnOk": {
+      "type": "string"
+    },
+    "urlReturnNo": {
+      "type": "string"
+    },
     "params": {
       "type": "object"
     },

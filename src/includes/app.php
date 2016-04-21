@@ -84,6 +84,11 @@ class PaymentsApp extends AbricosApplication {
         /** @var PaymentsForm $form */
         $form = $this->InstanceClass('Form');
 
+        $host = 'http://'.Ab_URI::fetch_host();
+
+        $form->urlReturnOk = $host.'/payments/pay/ok/'.$order->id.'/';
+        $form->urlReturnNo = $host.'/payments/pay/no/'.$order->id.'/';
+
         $form->engineModule = $config->engineModule;
         $form->order = $order;
 

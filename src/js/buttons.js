@@ -10,21 +10,28 @@ Component.entryPoint = function(NS){
         COMPONENT = this,
         SYS = Brick.mod.sys;
 
-
-
-    NS.InfoWidget = Y.Base.create('InfoWidget', SYS.AppWidget, [], {
-        onInitAppWidget: function(err, appInstance, options){
-        },
-    }, {
-        ATTRS: {
-            component: {value: COMPONENT},
-            templateBlockName: {value: 'info'},
-            form: {value: null}
-        },
-        CLICKS: {}
-    });
-
     NS.ButtonWidget = Y.Base.create('InfoWidget', SYS.AppWidget, [], {
+        buildTData: function(){
+            var form = this.get('form');
+            if (!form){
+                return {};
+            }
+            var tp = this.template,
+                params = form.get('params'),
+                lstParams = "";
+
+            for (var n in params){
+                lstParams += tp.replace('param', {
+                    name: n,
+                    value: params[n]
+                });
+            }
+
+            return {
+                url: form.get('url'),
+                params: lstParams
+            };
+        },
         onInitAppWidget: function(err, appInstance, options){
             var tp = this.template,
                 form = this.get('form');
@@ -33,21 +40,37 @@ Component.entryPoint = function(NS){
                 return;
             }
 
-            form.use();
-
-            var engineModule = form.get('engineModule');
-
-
-            console.log(form.getAttrs());
-
+            form.use('buttons', this._onLoadEngineComponent, this);
         },
+        destructor: function(){
+            if (this.infoWidget){
+                this.infoWidget.destroy();
+            }
+            this.infoWidget = null;
+        },
+        _onLoadEngineComponent: function(err, NSEngine){
+            var tp = this.template,
+                srcInfo = this.get('srcInfo'),
+                form = this.get('form');
+
+            if (srcInfo){
+                this.infoWidget = new NSEngine.InfoWidget({
+                    srcNode: srcInfo,
+                    form: form
+                });
+            }
+
+
+        }
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'button'},
+            templateBlockName: {value: 'widget,param'},
+            srcInfo: {value: null},
             form: {value: null}
         },
-        CLICKS: {}
+        CLICKS: {},
+
     });
 
 };

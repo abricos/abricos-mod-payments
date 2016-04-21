@@ -27,6 +27,8 @@ class PaymentsOrder extends AbricosModel {
  *
  * @property string $engineModule
  * @property string $url
+ * @property string $urlReturnOk
+ * @property string $urlReturnNo
  * @property object $params
  * @property PaymentsOrder $order
  */

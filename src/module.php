@@ -15,7 +15,7 @@ class PaymentsModule extends Ab_Module {
     public function __construct(){
         $this->version = "0.1.0";
         $this->name = "payments";
-        // $this->takelink = "payments";
+        $this->takelink = "payments";
 
         $this->permission = new PaymentsPermission($this);
     }
