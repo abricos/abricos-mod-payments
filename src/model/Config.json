@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "engineModule": {
+      "type": "string"
+    }
+  }
+}

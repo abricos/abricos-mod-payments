@@ -1,0 +1,25 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "string",
+      "dbField": "orderid"
+    },
+    "ownerModule": {
+      "type": "string"
+    },
+    "ownerType": {
+      "type": "string"
+    },
+    "ownerId": {
+      "type": "int"
+    },
+    "total": {
+      "type": "double"
+    },
+    "dateline": {
+      "type": "date"
+    }
+  }
+}

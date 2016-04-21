@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "engineModule": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "params": {
+      "type": "object"
+    },
+    "order": {
+      "type": "model:Order"
+    }
+  }
+}
