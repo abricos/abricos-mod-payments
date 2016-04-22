@@ -23,6 +23,24 @@ class PaymentsModule extends Ab_Module {
     public function Bos_IsMenu(){
         return true;
     }
+
+    public function GetContentName(){
+        $adress = Abricos::$adress;
+        $dir = $adress->dir;
+
+
+        if ($adress->level >= 3 && $dir[1] === 'pay'){
+            switch ($dir[2]){
+                case "ok";
+                    return "payOk";
+                case "no";
+                    return "payNo";
+            }
+        }
+        return null;
+    }
+
+
 }
 
 class PaymentsAction {

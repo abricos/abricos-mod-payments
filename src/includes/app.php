@@ -102,6 +102,11 @@ class PaymentsApp extends AbricosApplication {
      * @return int|PaymentsOrder
      */
     public function Order($orderid){
+
+        if (isset($this->_cache['Order'][$orderid])){
+            return $this->_cache['Order'][$orderid];
+        }
+
         $d = PaymentsQuery::Order($this, $orderid);
 
         if (empty($d)){
@@ -111,9 +116,29 @@ class PaymentsApp extends AbricosApplication {
         /** @var PaymentsOrder $order */
         $order = $this->InstanceClass('Order', $d);
 
+        $this->_cache['Order'][$orderid] = $order;
+
         return $order;
     }
 
+    public function OrderInfoHTML($orderid){
+        $order = $this->Order($orderid);
+        if (AbricosResponse::IsError($order)){
+            return "";
+        }
+
+        $brick = Brick::$builder->LoadBrickS($order->ownerModule, 'paymentOrderInfo', null, array(
+            "p" => array(
+                "order" => $order
+            )
+        ));
+
+        if (empty($brick)){
+            return "";
+        }
+
+        return $brick->content;
+    }
 
     public function ConfigToJSON(){
         $res = $this->Config();

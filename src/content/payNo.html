@@ -1,0 +1,28 @@
+<!--[*]
+[tt=main][/tt]
+
+[script]content/payNo.php[/script]
+
+[v=orderNotFound]
+    <p class="text-danger">
+        Ошибка: Заказа не найден!
+    </p>
+[/v]
+
+[v=orderInfo]
+    <p>
+        Идентификатор заказа: {v#orderid}
+    </p>
+
+    <div class="orderInfo">
+        {v#orderInfo}
+    </div>
+[/v]
+
+
+[*]-->
+<div class="aw-payments payNo">
+    <h2>Платеж не совершен</h2>
+
+    {v#result}
+</div>
