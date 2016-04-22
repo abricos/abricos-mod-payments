@@ -22,6 +22,7 @@ if ($updateManager->isUpdate('0.1.0')){
 		  ownerType VARCHAR(50) NOT NULL DEFAULT '' COMMENT '',
 		  ownerId INT(10) unsigned NOT NULL DEFAULT 0,
           total double(10, 2) NOT NULL DEFAULT 0 COMMENT '',
+		  status ENUM('not', 'authorized', 'not_authorized', 'paid', 'canceled', 'waiting') DEFAULT 'not' COMMENT '',
 		  dateline INT(10) unsigned NOT NULL DEFAULT 0,
 		  UNIQUE KEY orderid (orderid)
 		 )".$charset

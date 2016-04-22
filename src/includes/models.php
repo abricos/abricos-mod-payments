@@ -15,6 +15,7 @@
  * @property string $ownerType
  * @property int $ownerId
  * @property double $total Order cost
+ * @property string $status
  * @property int $dateline
  */
 class PaymentsOrder extends AbricosModel {

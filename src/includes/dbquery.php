@@ -39,6 +39,21 @@ class PaymentsQuery {
         return $db->query_first($sql);
     }
 
+    /**
+     * @param AbricosApplication $app
+     * @param PaymentsOrder $order
+     */
+    public static function OrderStatusUpdate(AbricosApplication $app, $order){
+        $db = $app->db;
+        $sql = "
+            UPDATE ".$db->prefix."payments_order
+            SET status='".bkstr($order->status)."'
+            WHERE orderid='".bkstr($order->id)."'
+            LIMIT 1
+        ";
+        return $db->query_write($sql);
+    }
+
 }
 
 ?>

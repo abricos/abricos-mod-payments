@@ -18,6 +18,12 @@
     "total": {
       "type": "double"
     },
+    "status": {
+      "type": "string",
+      "valid": "not,authorized,not_authorized,paid,canceled,waiting",
+      "default": "not",
+      "notNULL": true
+    },
     "dateline": {
       "type": "date"
     }

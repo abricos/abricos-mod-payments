@@ -36,6 +36,11 @@ class PaymentsModule extends Ab_Module {
                 case "no";
                     return "payNo";
             }
+        } else if ($adress->level >= 3 && $dir[1] === 'api' && Abricos::$config['Misc']['develop_mode']){ // http://example.com/payments/api/uniteller/
+            return "payAPI";
+
+        } else if ($adress->level >= 3 && $dir[1] === 'test' && Abricos::$config['Misc']['develop_mode']){ // http://example.com/payments/test/uniteller/
+            return "test";
         }
         return null;
     }

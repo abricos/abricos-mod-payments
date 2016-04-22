@@ -1,0 +1,28 @@
+<!--[*]
+[tt=main][/tt]
+
+[script]content/payOk.php[/script]
+
+[v=orderNotFound]
+    <p class="text-danger">
+
+    </p>
+[/v]
+
+[v=orderInfo]
+    <p>
+        Идентификатор заказа: {v#orderid}
+    </p>
+
+    <div class="orderInfo">
+        {v#orderInfo}
+    </div>
+[/v]
+
+
+[*]-->
+<div class="aw-payments payOk">
+    <h2>Платеж совершен успешно</h2>
+
+    {v#result}
+</div>
