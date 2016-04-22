@@ -21,9 +21,19 @@ $dir = Abricos::$adress->dir;
 /** @var PaymentsEngine $engineApp */
 $engineApp = Abricos::GetApp(isset($dir[2]) ? $dir[2] : '');
 if (empty($engineApp)){
+    $brick->content = "Error 500";
     return;
 }
 
-$status = $engineApp->OrderStatusByPOST();
+$order = $engineApp->OrderStatusByPOST();
+
+if (AbricosResponse::IsError($order)){
+    $brick->content = "Error ".$order;
+    return;
+}
+
+PaymentsQuery::OrderStatusUpdate($app, $order);
+
+$brick->content = "OK";
 
 ?>
