@@ -7,33 +7,29 @@
  * @author Alexander Kuzmin <roosit@abricos.org>
  */
 
+// Example: http://mysite.tld/payments/api/uniteller/orderStatusUpdate/
+
 $brick = Brick::$builder->brick;
 $p = &$brick->param->param;
 $v = &$brick->param->var;
 
+$dir = Abricos::$adress->dir;
+$engineModuleName = isset($dir[2]) ? $dir[2] : '';
+$action = isset($dir[3]) ? $dir[3] : '';
+$p1 = isset($dir[4]) ? $dir[4] : '';
+$p2 = isset($dir[5]) ? $dir[5] : '';
+$p3 = isset($dir[6]) ? $dir[6] : '';
+
 /** @var PaymentsApp $app */
 $app = Abricos::GetApp('payments');
+$result = $app->PayAPI($engineModuleName, $action, $p1, $p2, $p3);
 
-$dir = Abricos::$adress->dir;
-
-// http://example.com/payments/api/uniteller/
-
-/** @var PaymentsEngine $engineApp */
-$engineApp = Abricos::GetApp(isset($dir[2]) ? $dir[2] : '');
-if (empty($engineApp)){
-    $brick->content = "Error 500";
+if (AbricosResponse::IsError($result)){
+    $brick->content = "Error ".$result;
     return;
 }
-
-$order = $engineApp->OrderStatusByPOST();
-
-if (AbricosResponse::IsError($order)){
-    $brick->content = "Error ".$order;
-    return;
-}
-
-PaymentsQuery::OrderStatusUpdate($app, $order);
 
 $brick->content = "OK";
+
 
 ?>

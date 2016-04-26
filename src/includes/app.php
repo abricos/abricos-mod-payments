@@ -102,7 +102,6 @@ class PaymentsApp extends AbricosApplication {
      * @return int|PaymentsOrder
      */
     public function Order($orderid){
-
         if (isset($this->_cache['Order'][$orderid])){
             return $this->_cache['Order'][$orderid];
         }
@@ -119,6 +118,13 @@ class PaymentsApp extends AbricosApplication {
         $this->_cache['Order'][$orderid] = $order;
 
         return $order;
+    }
+
+    public function OrderStatusUpdateMethod(PaymentsOrder $order){
+
+        // TODO: check order status
+
+        PaymentsQuery::OrderStatusUpdate($this, $order);
     }
 
     public function OrderInfoHTML($orderid){
@@ -138,6 +144,21 @@ class PaymentsApp extends AbricosApplication {
         }
 
         return $brick->content;
+    }
+
+    /**
+     * Запрос платежного сервера на этот сайт
+     *
+     * Например: http://mysite.tld/payments/api/uniteller/orderStatusUpdate/
+     */
+    public function PayAPI($engineModuleName, $action, $p1, $p2, $p3){
+        /** @var PaymentsEngine $engineApp */
+        $engineApp = Abricos::GetApp($engineModuleName);
+        if (empty($engineApp)){
+            return AbricosResponse::ERR_BAD_REQUEST;
+        }
+
+        return $engineApp->API($action, $p1, $p2, $p3);
     }
 
     public function ConfigToJSON(){

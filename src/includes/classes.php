@@ -52,7 +52,7 @@ abstract class PaymentsEngine extends AbricosApplication {
 
     public abstract function FormFill(PaymentsForm $form);
 
-    public abstract function OrderStatusByPOST();
+    public abstract function API($action, $p1, $p2, $p3);
 }
 
 ?>
