@@ -55,6 +55,14 @@ class PaymentsApp extends AbricosApplication {
 
         PaymentsQuery::OrderAppend($this, $ownerModule, $ownerType, $ownerId, $orderid, $total);
 
+        $this->LogDebug('New order append', array(
+            'orderid' => $orderid,
+            'ownerModule' => $ownerModule,
+            'ownerType' => $ownerType,
+            'ownerId' => $ownerId,
+            'total' => $total
+        ));
+
         return $this->Order($orderid);
     }
 
@@ -122,6 +130,11 @@ class PaymentsApp extends AbricosApplication {
 
     public function OrderStatusUpdateMethod(PaymentsOrder $order){
 
+        $this->LogInfo('Order status update', array(
+            'orderid' => $order->id,
+            'status' => $order->status
+        ));
+
         // TODO: check order status
 
         PaymentsQuery::OrderStatusUpdate($this, $order);
@@ -152,9 +165,21 @@ class PaymentsApp extends AbricosApplication {
      * Например: http://mysite.tld/payments/api/uniteller/orderStatusUpdate/
      */
     public function PayAPI($engineModuleName, $action, $p1, $p2, $p3){
+
+        $this->LogTrace('API request', array(
+            'engineModule' => $engineModuleName,
+            'action' => $action,
+            'p1' => $p1,
+            'p2' => $p2,
+            'p3' => $p3,
+        ));
+
         /** @var PaymentsEngine $engineApp */
         $engineApp = Abricos::GetApp($engineModuleName);
         if (empty($engineApp)){
+            $this->LogError('Engine module not found in API request', array(
+                'engineModule' => $engineModuleName
+            ));
             return AbricosResponse::ERR_BAD_REQUEST;
         }
 
