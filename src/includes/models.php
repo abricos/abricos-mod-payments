@@ -43,6 +43,8 @@ class PaymentsForm extends AbricosModel {
  * Class PaymentsConfig
  *
  * @property string $engineModule
+ * @property bool $notifyOrderStatusChange
+ * @property string $notifyEmail
  */
 class PaymentsConfig extends AbricosModel {
     protected $_structModule = 'payments';

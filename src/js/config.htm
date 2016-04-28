@@ -1,40 +1,72 @@
 <!--{widget}-->
 <form id="{i#id}" class="config">
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <div class="panel-heading text-center">
+            <h3 class="panel-title pull-left">Настройки</h3>
 
-            <div class="row">
-                <div class="col-md-7">
-                    <h3 class="panel-title">Настройки</h3>
+            <span data-wait="show">
+                <img src="/images/loading.gif"/>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Платежный модуль</label>
+                    <div class="col-md-9">
+                        <input name="engineModule" type="text" class="form-control" data-wait="disable">
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <div class="btn-toolbar text-right">
-                        <span data-wait="show">
-                            <img src="/images/loading.gif"/>
-                        </span>
+
+                <hr/>
+
+                <h4>Уведомления для администратора</h4>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">
+                        Изменение статуса заказа
+                    </label>
+                    <div class="col-md-9">
+                        <select name="notifyOrderStatusChange" class="col-sm-5 form-control" data-wait="disable">
+                            <option value="true">Уведомлять</option>
+                            <option value="false">Отключено</option>
+                        </select>
+                        <div class="help-block">
+                            Включить/отключить отправку сообщения администратору при автоматическом
+                            изменении статуса заказа платежной системой
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">
+                        E-mail для уведомлений
+                    </label>
+                    <div class="col-md-9">
+                        <input name="notifyEmail" type="text" class="form-control" data-wait="disable">
+
+                        <div class="help-block">
+                            Если адресатов несколько, то их необходимо указать через запятую.
+                            <br />
+                            Если поле не заполнено, то будет использован глобальный адрес электронный почты администратора сайта
+                        </div>
                     </div>
                 </div>
 
             </div>
-
         </div>
-        <div class="panel-body">
-            <div class="form-group">
-                <label>Платежный модуль</label>
-                <input name="engineModule" type="text" class="form-control" data-wait="disable">
-            </div>
+        <div class="panel-footer text-center">
+            <span data-wait="show">
+                <img src="/images/loading.gif"/>
+            </span>
 
-            <hr />
-
-            <div class="text-right">
-                <span data-wait="show">
-                    <img src="/images/loading.gif"/>
-                </span>
+            <div class="pull-right">
                 <button type="submit" class="btn btn-default edit-isedit" data-wait="disable">
                     Сохранить
                 </button>
             </div>
-
+            <div class="clearfix"></div>
         </div>
     </div>
 </form>

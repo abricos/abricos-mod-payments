@@ -4,6 +4,15 @@
   "fields": {
     "engineModule": {
       "type": "string"
+    },
+    "notifyOrderStatusChange": {
+      "rolefn": "IsAdminRole",
+      "type": "bool",
+      "default": true
+    },
+    "notifyEmail": {
+      "rolefn": "IsAdminRole",
+      "type": "string"
     }
   }
 }

@@ -128,7 +128,25 @@ class PaymentsApp extends AbricosApplication {
         return $order;
     }
 
-    public function OrderStatusUpdateMethod(PaymentsOrder $order){
+    public function OrderStatusUpdateMethod(PaymentsOrder $order, $status){
+
+        if ($order->status === $status){
+            $this->LogTrace('Current status of the order coincides with a new status', array(
+                'orderid' => $order->id
+            ));
+            return false;
+        }
+
+        $oldStatus = $order->status;
+        $order->status = $status;
+
+        if ($order->status !== $status){
+            $this->LogError('Invalid order status', array(
+                'orderid' => $order->id,
+                'status' => $status
+            ));
+            return false;
+        }
 
         $this->LogInfo('Order status update', array(
             'orderid' => $order->id,
@@ -138,6 +156,45 @@ class PaymentsApp extends AbricosApplication {
         // TODO: check order status
 
         PaymentsQuery::OrderStatusUpdate($this, $order);
+
+        $config = $this->Config();
+
+        if (!$config->notifyOrderStatusChange){
+            return true;
+        }
+
+        /** @var NotifyApp $notifyApp */
+        $notifyApp = Abricos::GetApp('notify');
+
+        $notifyBrick = Brick::$builder->LoadBrickS("payments", "notifyOrderStatus");
+        $v = &$notifyBrick->param->var;
+
+        $emails = explode(",", $config->notifyEmail);
+        for ($i = 0; $i < count($emails); $i++){
+            $email = trim($emails[$i]);
+            if (empty($email)){
+                continue;
+            }
+
+            $mail = $notifyApp->MailByFields(
+                $email,
+                Brick::ReplaceVarByData($v['subject'], array(
+                    "status" => $order->status
+                )),
+                Brick::ReplaceVarByData($notifyBrick->content, array(
+                    "email" => $email,
+                    "orderid" => $order->id,
+                    "status" => $order->status,
+                    "oldStatus" => $oldStatus,
+                    "total" => $order->total,
+                    "sitename" => SystemModule::$instance->GetPhrases()->Get('site_name')
+                ))
+            );
+
+            $notifyApp->MailSend($mail);
+        }
+
+        return true;
     }
 
     public function OrderInfoHTML($orderid){
@@ -215,6 +272,14 @@ class PaymentsApp extends AbricosApplication {
             $d['engineModule'] = 'uniteller';
         }
 
+        if (!isset($d['notifyOrderStatusChange'])){
+            $d['notifyOrderStatusChange'] = true;
+        }
+
+        if (!isset($d['notifyEmail'])){
+            $d['notifyEmail'] = '';
+        }
+
         return $this->_cache['Config'] = $this->InstanceClass('Config', $d);
     }
 
@@ -229,10 +294,16 @@ class PaymentsApp extends AbricosApplication {
         }
 
         $utmf = Abricos::TextParser(true);
-        $d->shopid = $utmf->Parser($d->shopid);
+        $config = $this->Config();
+
+        $config->engineModule = $utmf->Parser($d->engineModule);
+        $config->notifyOrderStatusChange = $d->notifyOrderStatusChange;
+        $config->notifyEmail = $utmf->Parser($d->notifyEmail);
 
         $phs = Abricos::GetModule('payments')->GetPhrases();
-        $phs->Set("engineModule", $d->engineModule);
+        $phs->Set("engineModule", $config->engineModule);
+        $phs->Set("notifyOrderStatusChange", $config->notifyOrderStatusChange);
+        $phs->Set("notifyEmail", $config->notifyEmail);
 
         Abricos::$phrases->Save();
     }
