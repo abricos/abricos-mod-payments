@@ -37,6 +37,3 @@ if (AbricosResponse::IsError($order)){
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
     "result" => $result
 ));
-
-
-?>

@@ -71,6 +71,10 @@ class PaymentsApp extends AbricosApplication {
         return $this->ResultToJSON('form', $res);
     }
 
+    /**
+     * @param $orderid
+     * @return PaymentsForm|int
+     */
     public function Form($orderid){
         if (!$this->manager->IsViewRole()){
             return AbricosResponse::ERR_FORBIDDEN;
@@ -105,6 +109,25 @@ class PaymentsApp extends AbricosApplication {
         return $form;
     }
 
+    public function FormHTML($orderid){
+        $order = $this->Order($orderid);
+        if (AbricosResponse::IsError($order)){
+            return "";
+        }
+
+        $brick = Brick::$builder->LoadBrickS('payments', 'payButton', null, array(
+            "p" => array(
+                "order" => $order
+            )
+        ));
+
+        if (empty($brick)){
+            return "";
+        }
+
+        return $brick->content;
+    }
+
     /**
      * @param $orderid
      * @return int|PaymentsOrder
@@ -129,7 +152,6 @@ class PaymentsApp extends AbricosApplication {
     }
 
     public function OrderStatusUpdateMethod(PaymentsOrder $order, $status){
-
         if ($order->status === $status){
             $this->LogTrace('Current status of the order coincides with a new status', array(
                 'orderid' => $order->id
@@ -208,6 +230,18 @@ class PaymentsApp extends AbricosApplication {
                 "order" => $order
             )
         ));
+
+        if (empty($brick)){
+            return "";
+        }
+
+        return $brick->content;
+    }
+
+    public function PaymentsMethodInfoHTML(){
+        $config = $this->Config();
+
+        $brick = Brick::$builder->LoadBrickS($config->engineModule, 'methodsInfo', null, null);
 
         if (empty($brick)){
             return "";
@@ -307,7 +341,4 @@ class PaymentsApp extends AbricosApplication {
 
         Abricos::$phrases->Save();
     }
-
 }
-
-?>

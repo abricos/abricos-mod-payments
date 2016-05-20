@@ -50,5 +50,3 @@ class PaymentsManager extends Ab_ModuleManager {
         );
     }
 }
-
-?>

@@ -50,5 +50,3 @@ class PaymentsConfig extends AbricosModel {
     protected $_structModule = 'payments';
     protected $_structName = 'Config';
 }
-
-?>

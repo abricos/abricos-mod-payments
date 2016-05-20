@@ -54,5 +54,3 @@ abstract class PaymentsEngine extends AbricosApplication {
 
     public abstract function API($action, $p1, $p2, $p3);
 }
-
-?>

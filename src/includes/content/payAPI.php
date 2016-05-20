@@ -30,6 +30,3 @@ if (AbricosResponse::IsError($result)){
 }
 
 $brick->content = "OK";
-
-
-?>

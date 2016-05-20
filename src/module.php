@@ -79,5 +79,3 @@ class PaymentsPermission extends Ab_UserPermission {
 }
 
 Abricos::ModuleRegister(new PaymentsModule());
-
-?>

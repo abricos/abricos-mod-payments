@@ -27,7 +27,4 @@ if ($updateManager->isUpdate('0.1.0')){
 		  UNIQUE KEY orderid (orderid)
 		 )".$charset
     );
-
 }
-
-?>

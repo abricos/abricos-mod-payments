@@ -1,0 +1,17 @@
+<!--[*]
+
+[script]brick/payButton.php[/script]
+
+[p=order][/p]
+
+[v=param]
+    <input type="hidden" name="{v#name}" value="{v#value}">
+[/v]
+
+[*]-->
+<!--{widget}-->
+<form action="{v#url}" method="POST">
+    {v#params}
+    <input type="submit" name="Submit" value="Оплатить" class="btn btn-default">
+</form>
+

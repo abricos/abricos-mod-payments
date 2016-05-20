@@ -14,20 +14,24 @@ $v = &$brick->param->var;
 /** @var PaymentsApp $app */
 $app = Abricos::GetApp('payments');
 
-$dir = Abricos::$adress->dir;
-
-// http://example.com/payments/test/uniteller/
-
-$engineAppName = isset($dir[2]) ? $dir[2] : '';
-
-/** @var PaymentsEngine $engineApp */
-$engineApp = Abricos::GetApp($engineAppName);
-if (empty($engineApp)){
+/** @var PaymentsOrder $order */
+$order = $p['order'];
+if (empty($order) || AbricosResponse::IsError($order)){
+    $brick->content = "";
     return;
 }
 
-$brickTest = Brick::$builder->LoadBrickS($engineAppName, 'test', $brick, array());
+$form = $app->Form($order->id);
+
+$params = "";
+foreach ($form->params as $name => $value){
+    $params .= Brick::ReplaceVarByData($v['param'], array(
+        "name" => $name,
+        "value" => $value
+    ));
+}
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
-    "result" => $brickTest->content
+    "url" => $form->url,
+    "params" => $params
 ));
