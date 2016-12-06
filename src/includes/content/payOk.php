@@ -32,6 +32,11 @@ if (AbricosResponse::IsError($order)){
         "orderInfo" => $orderInfo
     ));
 
+    $ownerConfig = $app->OwnerConfig();
+
+    if ($ownerConfig->cronCheckOrderStatus){
+        $app->OrderStatusUpdateMethod($order, PaymentsEngine::STATUS_WAITING);
+    }
 }
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(

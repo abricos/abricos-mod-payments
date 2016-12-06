@@ -20,7 +20,8 @@ class PaymentsApp extends AbricosApplication {
         return array(
             'Order' => 'PaymentsOrder',
             'Form' => 'PaymentsForm',
-            'Config' => 'PaymentsConfig'
+            'Config' => 'PaymentsConfig',
+            'OwnerConfig' => 'PaymentsOwnerConfig'
         );
     }
 
@@ -36,11 +37,13 @@ class PaymentsApp extends AbricosApplication {
                 return $this->ConfigToJSON();
             case "configSave":
                 return $this->ConfigSaveToJSON($d->config);
-
         }
         return null;
     }
 
+    /**
+     * @return PaymentsEngine
+     */
     public function Engine(){
         $config = $this->Config();
 
@@ -50,20 +53,22 @@ class PaymentsApp extends AbricosApplication {
         return $app;
     }
 
-    public function OrderAppend($ownerModule, $ownerType, $ownerId, $total){
-        $orderid = md5(md5($ownerModule.$ownerType.$ownerId).md5(TIMENOW));
+    /**
+     * @return PaymentsOwnerConfig
+     */
+    public function OwnerConfig(){
+        if ($this->CacheExists('OwnerConfig')){
+            return $this->Cache('OwnerConfig');
+        }
 
-        PaymentsQuery::OrderAppend($this, $ownerModule, $ownerType, $ownerId, $orderid, $total);
+        $engine = $this->Engine();
+        $data = $engine->OwnerConfigData();
 
-        $this->LogDebug('New order append', array(
-            'orderid' => $orderid,
-            'ownerModule' => $ownerModule,
-            'ownerType' => $ownerType,
-            'ownerId' => $ownerId,
-            'total' => $total
-        ));
+        /** @var PaymentsOwnerConfig $ownerConfig */
+        $ownerConfig = $this->InstanceClass('OwnerConfig', $data);
 
-        return $this->Order($orderid);
+        $this->SetCache('OwnerConfig', $ownerConfig);
+        return $ownerConfig;
     }
 
     public function FormToJSON($orderid){
@@ -93,15 +98,16 @@ class PaymentsApp extends AbricosApplication {
 
         $config = $this->Config();
 
+        $host = Ab_URI::Site();
+
         /** @var PaymentsForm $form */
-        $form = $this->InstanceClass('Form');
+        $form = $this->InstanceClass('Form', array(
+            "urlReturnOk" => $host.'/payments/pay/ok/'.$order->id.'/',
+            "urlReturnNo" => $host.'/payments/pay/no/'.$order->id.'/',
+            "engineModule" => $config->engineModule,
+            "method" => "POST"
+        ));
 
-        $host = 'http://'.Ab_URI::fetch_host();
-
-        $form->urlReturnOk = $host.'/payments/pay/ok/'.$order->id.'/';
-        $form->urlReturnNo = $host.'/payments/pay/no/'.$order->id.'/';
-
-        $form->engineModule = $config->engineModule;
         $form->order = $order;
 
         $engine->FormFill($form);
@@ -128,6 +134,22 @@ class PaymentsApp extends AbricosApplication {
         return $brick->content;
     }
 
+    public function OrderAppend($ownerModule, $ownerType, $ownerId, $total){
+        $orderid = md5(md5($ownerModule.$ownerType.$ownerId).md5(TIMENOW));
+
+        PaymentsQuery::OrderAppend($this, $ownerModule, $ownerType, $ownerId, $orderid, $total);
+
+        $this->LogDebug('New order append', array(
+            'orderid' => $orderid,
+            'ownerModule' => $ownerModule,
+            'ownerType' => $ownerType,
+            'ownerId' => $ownerId,
+            'total' => $total
+        ));
+
+        return $this->Order($orderid);
+    }
+
     /**
      * @param $orderid
      * @return int|PaymentsOrder
@@ -149,6 +171,21 @@ class PaymentsApp extends AbricosApplication {
         $this->_cache['Order'][$orderid] = $order;
 
         return $order;
+    }
+
+    /**
+     * Запросить статус заказа у шлюза
+     *
+     * @param PaymentsOrder $order
+     */
+    public function OrderStatusRequest(PaymentsOrder $order){
+        $status = $this->Engine()->OrderStatusRequest($order);
+
+        if (empty($status)){
+            return false;
+        }
+
+        return $this->OrderStatusUpdateMethod($order, $status);
     }
 
     public function OrderStatusUpdateMethod(PaymentsOrder $order, $status){
@@ -251,7 +288,7 @@ class PaymentsApp extends AbricosApplication {
     }
 
     /**
-     * Запрос платежного сервера на этот сайт
+     * Запрос платежного шлюза на этот сайт
      *
      * Например: http://mysite.tld/payments/api/uniteller/orderStatusUpdate/
      */
@@ -283,7 +320,7 @@ class PaymentsApp extends AbricosApplication {
     }
 
     /**
-     * @return PaymentsConfig
+     * @return PaymentsConfig|int
      */
     public function Config(){
         if (isset($this->_cache['Config'])){

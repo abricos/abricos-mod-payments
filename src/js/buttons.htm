@@ -1,8 +1,19 @@
 <!--{widget}-->
-<form action="{v#url}" method="POST">
+<form action="{v#url}" method="{v#method}">
     {v#params}
-    <input type="submit" name="Submit" value="Оплатить" class="btn btn-default">
+    {v#button}
 </form>
+
+<!--{buttonPOST}-->
+<input type="submit" value="Оплатить" class="btn btn-default">
+
+<!--{buttonGET}-->
+<input type="submit" value="Оплатить" class="btn btn-default">
+
+<!--{buttonLINK}-->
+<a href="{v#url}" class="btn btn-default">
+    Оплатить
+</a>
 
 <!--{param}-->
 <input type="hidden" name="{v#name}" value="{v#value}">

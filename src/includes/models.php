@@ -30,6 +30,7 @@ class PaymentsOrder extends AbricosModel {
  * @property string $url
  * @property string $urlReturnOk
  * @property string $urlReturnNo
+ * @property string $method
  * @property object $params
  * @property PaymentsOrder $order
  */
@@ -49,4 +50,15 @@ class PaymentsForm extends AbricosModel {
 class PaymentsConfig extends AbricosModel {
     protected $_structModule = 'payments';
     protected $_structName = 'Config';
+}
+
+/**
+ * Class PaymentsOwnerConfig
+ *
+ * @property string $module
+ * @property bool cronCheckOrderStatus
+ */
+class PaymentsOwnerConfig extends AbricosModel {
+    protected $_structModule = 'payments';
+    protected $_structName = 'OwnerConfig';
 }

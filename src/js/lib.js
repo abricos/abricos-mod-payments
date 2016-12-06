@@ -30,12 +30,17 @@ Component.entryPoint = function(NS){
             Order: {value: NS.Order},
             Form: {value: NS.Form},
             Config: {value: NS.Config},
+            ConfigOwner: {value: NS.ConfigOwner},
         },
         REQS: {
             form: {
                 args: ['orderid'],
                 attribute: true,
                 type: 'model:Form'
+            },
+            configOwner: {
+                attribute: true,
+                type: 'model:ConfigOwner'
             },
             config: {
                 attribute: true,

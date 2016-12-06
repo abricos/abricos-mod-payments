@@ -28,6 +28,10 @@ Component.entryPoint = function(NS){
         }
     });
 
+    NS.ConfigOwner = Y.Base.create('configOwner', SYS.AppModel, [], {
+        structureName: 'ConfigOwner'
+    });
+
     NS.Config = Y.Base.create('config', SYS.AppModel, [], {
         structureName: 'Config'
     });

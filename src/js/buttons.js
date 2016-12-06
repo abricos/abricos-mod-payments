@@ -18,6 +18,7 @@ Component.entryPoint = function(NS){
             }
             var tp = this.template,
                 params = form.get('params'),
+                method = form.get('method'),
                 lstParams = "";
 
             for (var n in params){
@@ -28,13 +29,16 @@ Component.entryPoint = function(NS){
             }
 
             return {
+                method: method === 'LINK' ? 'GET' : method,
+                button: tp.replace('button' + method, {
+                    url: form.get('url'),
+                }),
                 url: form.get('url'),
                 params: lstParams
             };
         },
         onInitAppWidget: function(err, appInstance, options){
-            var tp = this.template,
-                form = this.get('form');
+            var form = this.get('form');
 
             if (!form){
                 return;
@@ -59,13 +63,11 @@ Component.entryPoint = function(NS){
                     form: form
                 });
             }
-
-
         }
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget,param'},
+            templateBlockName: {value: 'widget,param,buttonPOST,buttonGET,buttonLINK'},
             srcInfo: {value: null},
             form: {value: null}
         },

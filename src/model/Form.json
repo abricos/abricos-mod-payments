@@ -14,6 +14,11 @@
     "urlReturnNo": {
       "type": "string"
     },
+    "method": {
+      "type": "string",
+      "notNULL": true,
+      "default": "POST"
+    },
     "params": {
       "type": "object"
     },

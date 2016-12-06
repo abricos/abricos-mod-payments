@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "type": "model",
+  "fields": {
+    "id": {
+      "type": "int",
+      "dbField": "module"
+    },
+    "module": {
+      "type": "string",
+      "dbField": "module"
+    },
+    "cronCheckOrderStatus": {
+      "rolefn": "IsAdminRole",
+      "type": "bool"
+    }
+  }
+}

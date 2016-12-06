@@ -47,10 +47,22 @@ abstract class PaymentsEngine extends AbricosApplication {
      * через платежную систему счёта на оплату и этап фактической
      * оплаты этого счёта Покупателем, которые существенно
      * разнесённы во времени
+     *
+     * А так же статус выставляется в том случае, когда оплата прошла,
+     * но шлюз не отправляет статус оплаты и его необходимо проверять
+     * по крону
      */
     const STATUS_WAITING = 'waiting';
 
     public abstract function FormFill(PaymentsForm $form);
 
     public abstract function API($action, $p1, $p2, $p3);
+
+    public function OrderStatusRequest(PaymentsOrder $order){
+        return null;
+    }
+
+    public function OwnerConfigData(){
+        return array();
+    }
 }
