@@ -32,6 +32,7 @@ class PaymentsOrder extends AbricosModel {
  * @property string $urlReturnNo
  * @property string $method
  * @property object $params
+ * @property object $error
  * @property PaymentsOrder $order
  */
 class PaymentsForm extends AbricosModel {

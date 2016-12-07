@@ -1,8 +1,15 @@
 <!--{widget}-->
 <form action="{v#url}" method="{v#method}">
+    {v#error}
     {v#params}
     {v#button}
 </form>
+
+<!--{error}-->
+<p class="text-danger">
+    Ошибка в формировании заказа.
+    Пожалуйста, обратитесь к администрации сайта.
+</p>
 
 <!--{buttonPOST}-->
 <input type="submit" value="Оплатить" class="btn btn-default">

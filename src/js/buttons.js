@@ -16,8 +16,18 @@ Component.entryPoint = function(NS){
             if (!form){
                 return {};
             }
-            var tp = this.template,
-                params = form.get('params'),
+            var tp = this.template;
+            if (form.get('error') > 0){
+                return {
+                    error: tp.replace('error'),
+                    params: '',
+                    button: '',
+                    url: '',
+                    method: ''
+                };
+            }
+
+            var params = form.get('params'),
                 method = form.get('method'),
                 lstParams = "";
 
@@ -34,7 +44,8 @@ Component.entryPoint = function(NS){
                     url: form.get('url'),
                 }),
                 url: form.get('url'),
-                params: lstParams
+                params: lstParams,
+                error: ''
             };
         },
         onInitAppWidget: function(err, appInstance, options){
@@ -53,8 +64,7 @@ Component.entryPoint = function(NS){
             this.infoWidget = null;
         },
         _onLoadEngineComponent: function(err, NSEngine){
-            var tp = this.template,
-                srcInfo = this.get('srcInfo'),
+            var                 srcInfo = this.get('srcInfo'),
                 form = this.get('form');
 
             if (srcInfo){
@@ -67,7 +77,7 @@ Component.entryPoint = function(NS){
     }, {
         ATTRS: {
             component: {value: COMPONENT},
-            templateBlockName: {value: 'widget,param,buttonPOST,buttonGET,buttonLINK'},
+            templateBlockName: {value: 'widget,error,param,buttonPOST,buttonGET,buttonLINK'},
             srcInfo: {value: null},
             form: {value: null}
         },

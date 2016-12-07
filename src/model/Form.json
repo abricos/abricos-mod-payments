@@ -22,6 +22,9 @@
     "params": {
       "type": "object"
     },
+    "error": {
+      "type": "int"
+    },
     "order": {
       "type": "model:Order"
     }
